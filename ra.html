@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Rose Day</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&amp;family=Playfair+Display:wght@400;600&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    .font-romantic { font-family: 'Great Vibes', cursive; }
+    .font-elegant { font-family: 'Playfair Display', serif; }
+    
+    /* Sky gradient that transitions */
+    .sky-bg {
+      background: linear-gradient(180deg, 
+        #fce4ec 0%, 
+        #f8bbd9 30%, 
+        #f48fb1 60%,
+        #f06292 100%);
+    }
+    
+    /* Ground/grass */
+    .ground {
+      background: linear-gradient(180deg,
+        #4a7c59 0%,
+        #3d6b4f 30%,
+        #2d5a3f 100%);
+    }
+    
+    /* Rose stem */
+    .stem {
+      background: linear-gradient(90deg, #2d5a3f, #4a7c59, #2d5a3f);
+      transform-origin: bottom center;
+    }
+    
+    /* Thorn */
+    .thorn {
+      background: #3d6b4f;
+    }
+    
+    /* Leaf */
+    .leaf {
+      background: linear-gradient(135deg, #5a8f6a 0%, #4a7c59 50%, #3d6b4f 100%);
+      border-radius: 0 80% 0 80%;
+    }
+    
+    .leaf-right {
+      border-radius: 80% 0 80% 0;
+    }
+    
+    /* Rose petals - realistic layers */
+    .petal-outer {
+      background: radial-gradient(ellipse at 30% 30%, 
+        #ff6b9d 0%, 
+        #e91e63 40%, 
+        #c2185b 70%,
+        #ad1457 100%);
+    }
+    
+    .petal-mid {
+      background: radial-gradient(ellipse at 40% 30%, 
+        #ff8fab 0%, 
+        #f06292 30%,
+        #e91e63 60%,
+        #c2185b 100%);
+    }
+    
+    .petal-inner {
+      background: radial-gradient(ellipse at 50% 40%, 
+        #ffb7c5 0%, 
+        #ff8fab 40%,
+        #f48fb1 70%,
+        #f06292 100%);
+    }
+    
+    .petal-center {
+      background: radial-gradient(ellipse at 50% 50%, 
+        #fce4ec 0%, 
+        #f8bbd9 50%,
+        #f48fb1 100%);
+    }
+    
+    /* Sepal (green part under petals) */
+    .sepal {
+      background: linear-gradient(180deg, #3d6b4f, #2d5a3f);
+    }
+    
+    /* Animation keyframes */
+    @keyframes growStem {
+      0% { height: 0; opacity: 0; }
+      100% { height: 100%; opacity: 1; }
+    }
+    
+    @keyframes growLeaf {
+      0% { transform: scale(0) rotate(0deg); opacity: 0; }
+      100% { transform: scale(1) rotate(var(--leaf-rotate)); opacity: 1; }
+    }
+    
+    @keyframes bloomPetal {
+      0% { transform: scale(0) rotate(var(--petal-start)); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: scale(1) rotate(var(--petal-end)); opacity: 1; }
+    }
+    
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes floatRose {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-15px) rotate(5deg); }
+      50% { transform: translateY(-5px) rotate(-3deg); }
+      75% { transform: translateY(-20px) rotate(3deg); }
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes sway {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+    
+    .floating-rose {
+      animation: floatRose 6s ease-in-out infinite;
+    }
+    
+    .sparkle {
+      animation: sparkle 2s ease-in-out infinite;
+    }
+    
+    /* Letter styling */
+    .letter-bg {
+      background: linear-gradient(135deg, 
+        #fff9f9 0%, 
+        #fff0f3 50%,
+        #ffe4e9 100%);
+      box-shadow: 
+        0 10px 40px rgba(0,0,0,0.2),
+        inset 0 0 60px rgba(255,182,193,0.3);
+    }
+    
+    .letter-lines {
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        #f8bbd9 31px,
+        #f8bbd9 32px
+      );
+    }
+    
+    .wax-seal {
+      background: radial-gradient(circle at 30% 30%,
+        #e91e63 0%,
+        #c2185b 50%,
+        #ad1457 100%);
+      box-shadow: 
+        2px 2px 5px rgba(0,0,0,0.3),
+        inset -2px -2px 5px rgba(0,0,0,0.2);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-hidden">
+  <div id="app" class="h-full w-full relative overflow-hidden"><!-- Sky Background -->
+   <div class="sky-bg absolute inset-0"></div><!-- Sun glow -->
+   <div class="absolute top-10 right-10 w-32 h-32 rounded-full opacity-60" style="background: radial-gradient(circle, #fff9c4 0%, #ffecb3 30%, transparent 70%);
+                filter: blur(10px);">
+   </div><!-- Clouds -->
+   <div class="absolute top-16 left-10 opacity-40">
+    <div class="flex">
+     <div class="w-16 h-8 bg-white rounded-full"></div>
+     <div class="w-12 h-10 bg-white rounded-full -ml-4 -mt-2"></div>
+     <div class="w-14 h-8 bg-white rounded-full -ml-3"></div>
+    </div>
+   </div>
+   <div class="absolute top-24 right-32 opacity-30">
+    <div class="flex">
+     <div class="w-12 h-6 bg-white rounded-full"></div>
+     <div class="w-10 h-8 bg-white rounded-full -ml-3 -mt-1"></div>
+     <div class="w-11 h-6 bg-white rounded-full -ml-2"></div>
+    </div>
+   </div><!-- Garden Ground -->
+   <div class="ground absolute bottom-0 left-0 right-0 h-1/3"></div><!-- Grass blades -->
+   <div id="grass" class="absolute bottom-1/3 left-0 right-0 h-8 overflow-hidden"><!-- Generated by JS -->
+   </div><!-- Rose Garden Container -->
+   <div id="rose-garden" class="absolute bottom-1/3 left-0 right-0 flex justify-center items-end gap-4 px-4" style="height: 55%;"><!-- Roses will grow here -->
+   </div><!-- Title Container - Hidden initially -->
+   <div id="title-container" class="absolute top-8 left-0 right-0 text-center opacity-0 pointer-events-none">
+    <h1 id="main-title" class="font-romantic text-6xl md:text-8xl text-white drop-shadow-lg" style="text-shadow: 2px 2px 10px rgba(233,30,99,0.5), 0 0 30px rgba(255,255,255,0.5);">Happy Rose Day</h1>
+    <p class="font-elegant text-xl md:text-2xl text-white mt-2 opacity-80">💕 With Love 💕</p>
+   </div><!-- Floating Roses Container - Hidden initially -->
+   <div id="floating-roses" class="absolute inset-0 pointer-events-none overflow-hidden opacity-0"><!-- Generated by JS -->
+   </div><!-- Sparkles Container -->
+   <div id="sparkles" class="absolute inset-0 pointer-events-none overflow-hidden"><!-- Generated by JS -->
+   </div><!-- Love Letter Button - Hidden initially -->
+   <div id="letter-btn-container" class="absolute bottom-8 left-0 right-0 flex justify-center opacity-0 pointer-events-none"><button id="open-letter-btn" class="font-elegant text-lg px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-3"> <span>💌</span> <span>Open Love Letter</span> <span>💌</span> </button>
+   </div><!-- Love Letter Overlay -->
+   <div id="letter-overlay" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-500">
+    <div class="letter-bg relative w-11/12 max-w-md mx-4 rounded-lg p-8 transform scale-90 transition-transform duration-500" id="letter-content"><!-- Letter decoration - roses -->
+     <div class="absolute -top-6 -left-6 transform -rotate-12">
+      <svg width="60" height="60" viewbox="0 0 100 100"><ellipse cx="50" cy="45" rx="25" ry="20" fill="#e91e63" /> <ellipse cx="40" cy="40" rx="18" ry="15" fill="#f06292" /> <ellipse cx="60" cy="40" rx="18" ry="15" fill="#f06292" /> <ellipse cx="50" cy="35" rx="12" ry="10" fill="#f8bbd9" /> <path d="M50 55 Q50 80 50 95" stroke="#4a7c59" stroke-width="4" fill="none" /> <ellipse cx="40" cy="70" rx="8" ry="5" fill="#5a8f6a" transform="rotate(-30 40 70)" />
+      </svg>
+     </div>
+     <div class="absolute -top-4 -right-4 transform rotate-12">
+      <svg width="50" height="50" viewbox="0 0 100 100"><ellipse cx="50" cy="45" rx="25" ry="20" fill="#e91e63" /> <ellipse cx="40" cy="40" rx="18" ry="15" fill="#f06292" /> <ellipse cx="60" cy="40" rx="18" ry="15" fill="#f06292" /> <ellipse cx="50" cy="35" rx="12" ry="10" fill="#f8bbd9" />
+      </svg>
+     </div><!-- Letter content -->
+     <div class="letter-lines relative z-10 max-h-96 overflow-y-auto pt-2 md:pt-4">
+      <h2 class="font-romantic text-2xl md:text-4xl text-rose-600 text-center mb-4">My Dearest</h2><!-- Photo Frame -->
+      <div class="mx-auto w-40 h-56 md:w-48 md:h-64 mb-4 rounded-lg overflow-hidden shadow-lg border-4 border-rose-200 relative"><img src="https://i.ibb.co/VrhGbdD/image.jpg" alt="Our Special Moment" loading="lazy" class="w-full h-full object-cover" onerror="console.error('Image failed to load:', this.src); this.style.background='linear-gradient(135deg, #fbbf24 0%, #f97316 30%, #ec4899 60%, #7c3aed 100%)'; this.alt='Our Special Moment';">
+      </div>
+      <p id="letter-text" class="font-elegant text-gray-700 text-xs md:text-base leading-relaxed text-center px-3 md:px-4">"I’m really sorry betuu, my love, that I couldn’t give you a real rose today. I know a real rose can be held in your hands, felt with your fingers, and smelled up close. But sometimes situations don’t let us do everything our heart wants. So instead of a real rose, I’m giving you this digital one — not because it’s less, but because it means something different. This digital rose will never dry, never lose its petals, and never fade with time. It won’t be affected by seasons, distance, or days passing by. It will stay safe with you, always, right there in your phone — just like my feelings for you stay safe in my heart. Whenever you look at it, I want you to remember that someone thought of you, cared for you, and chose you, even from far away. Maybe it’s not something you can touch, but it carries real emotions, real love, and real intention. Every pixel of this rose holds my apology, my affection, and my promise that one day I’ll give you a real rose too — one you can hold, one that smells sweet, and one that comes with me standing right in front of you. Until that day comes, keep this digital rose with you. Let it remind you that you are special, you are loved, and you are always on my mind. Just like this rose will never fade from your phone, you will never fade from my heart. love you betuu 🌹❤️"</p>
+     </div><!-- Close button --> <button id="close-letter-btn" class="absolute top-2 right-2 w-8 h-8 bg-rose-100 hover:bg-rose-200 rounded-full flex items-center justify-center text-rose-600 transition-colors"> ✕ </button>
+    </div>
+   </div><!-- Loading/Growing indicator -->
+   <div id="growing-text" class="absolute bottom-4 left-0 right-0 text-center">
+    <p class="font-elegant text-white text-lg opacity-80">🌱 Growing your rose garden...</p>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_title: 'Happy Rose Day',
+      letter_message: "I’m really sorry betuu, my love, that I couldn’t give you a real rose today. I know a real rose can be held in your hands, felt with your fingers, and smelled up close. But sometimes situations don’t let us do everything our heart wants. So instead of a real rose, I’m giving you this digital one — not because it’s less, but because it means something different. This digital rose will never dry, never lose its petals, and never fade with time. It won’t be affected by seasons, distance, or days passing by. It will stay safe with you, always, right there in your phone — just like my feelings for you stay safe in my heart. Whenever you look at it, I want you to remember that someone thought of you, cared for you, and chose you, even from far away. Maybe it’s not something you can touch, but it carries real emotions, real love, and real intention. Every pixel of this rose holds my apology, my affection, and my promise that one day I’ll give you a real rose too — one you can hold, one that smells sweet, and one that comes with me standing right in front of you. Until that day comes, keep this digital rose with you. Let it remind you that you are special, you are loved, and you are always on my mind. Just like this rose will never fade from your phone, you will never fade from my heart. 🌹❤️",
+      primary_color: '#e91e63',
+      secondary_color: '#f8bbd9',
+      text_color: '#ffffff',
+      accent_color: '#4a7c59',
+      bg_color: '#fce4ec'
+    };
+
+    let config = { ...defaultConfig };
+
+    // Create a single realistic rose SVG
+    function createRoseSVG(size = 80, id = '') {
+      return `
+        <svg width="${size}" height="${size * 1.8}" viewBox="0 0 100 180" class="rose-svg" data-id="${id}">
+          <!-- Stem -->
+          <path class="stem-path" d="M50 180 Q48 140 50 100 Q52 80 50 70" 
+                stroke="#4a7c59" stroke-width="4" fill="none" stroke-linecap="round"/>
+          
+          <!-- Thorns -->
+          <path d="M48 150 L42 145 L48 148" fill="#3d6b4f"/>
+          <path d="M52 130 L58 125 L52 128" fill="#3d6b4f"/>
+          <path d="M48 110 L42 105 L48 108" fill="#3d6b4f"/>
+          
+          <!-- Leaves -->
+          <g class="leaf-group-1" style="transform-origin: 50px 140px;">
+            <ellipse cx="35" cy="140" rx="15" ry="8" fill="url(#leafGradient${id})" transform="rotate(-45 35 140)"/>
+            <path d="M35 140 L25 135" stroke="#3d6b4f" stroke-width="1" fill="none"/>
+          </g>
+          <g class="leaf-group-2" style="transform-origin: 50px 120px;">
+            <ellipse cx="65" cy="120" rx="14" ry="7" fill="url(#leafGradient${id})" transform="rotate(40 65 120)"/>
+            <path d="M65 120 L75 116" stroke="#3d6b4f" stroke-width="1" fill="none"/>
+          </g>
+          
+          <!-- Sepals -->
+          <path d="M40 72 Q35 65 38 58" stroke="#4a7c59" stroke-width="3" fill="none"/>
+          <path d="M60 72 Q65 65 62 58" stroke="#4a7c59" stroke-width="3" fill="none"/>
+          <path d="M45 70 Q42 62 45 55" stroke="#4a7c59" stroke-width="2" fill="none"/>
+          <path d="M55 70 Q58 62 55 55" stroke="#4a7c59" stroke-width="2" fill="none"/>
+          
+          <!-- Rose petals - layered for realism -->
+          <!-- Outer petals -->
+          <ellipse class="petal petal-1" cx="30" cy="45" rx="18" ry="22" fill="url(#petalOuter${id})" transform="rotate(-30 30 45)"/>
+          <ellipse class="petal petal-2" cx="70" cy="45" rx="18" ry="22" fill="url(#petalOuter${id})" transform="rotate(30 70 45)"/>
+          <ellipse class="petal petal-3" cx="50" cy="55" rx="20" ry="18" fill="url(#petalOuter${id})"/>
+          <ellipse class="petal petal-4" cx="35" cy="35" rx="16" ry="20" fill="url(#petalOuter${id})" transform="rotate(-50 35 35)"/>
+          <ellipse class="petal petal-5" cx="65" cy="35" rx="16" ry="20" fill="url(#petalOuter${id})" transform="rotate(50 65 35)"/>
+          
+          <!-- Mid petals -->
+          <ellipse class="petal petal-6" cx="40" cy="40" rx="14" ry="18" fill="url(#petalMid${id})" transform="rotate(-20 40 40)"/>
+          <ellipse class="petal petal-7" cx="60" cy="40" rx="14" ry="18" fill="url(#petalMid${id})" transform="rotate(20 60 40)"/>
+          <ellipse class="petal petal-8" cx="50" cy="48" rx="16" ry="14" fill="url(#petalMid${id})"/>
+          
+          <!-- Inner petals -->
+          <ellipse class="petal petal-9" cx="45" cy="38" rx="10" ry="14" fill="url(#petalInner${id})" transform="rotate(-10 45 38)"/>
+          <ellipse class="petal petal-10" cx="55" cy="38" rx="10" ry="14" fill="url(#petalInner${id})" transform="rotate(10 55 38)"/>
+          
+          <!-- Center -->
+          <ellipse class="petal petal-center" cx="50" cy="38" rx="8" ry="10" fill="url(#petalCenter${id})"/>
+          <ellipse cx="50" cy="36" rx="4" ry="5" fill="#fce4ec"/>
+          
+          <!-- Dew drops -->
+          <circle cx="35" cy="50" r="2" fill="rgba(255,255,255,0.8)"/>
+          <circle cx="62" cy="42" r="1.5" fill="rgba(255,255,255,0.7)"/>
+          
+          <!-- Gradients -->
+          <defs>
+            <radialGradient id="petalOuter${id}" cx="30%" cy="30%">
+              <stop offset="0%" stop-color="#ff6b9d"/>
+              <stop offset="40%" stop-color="#e91e63"/>
+              <stop offset="70%" stop-color="#c2185b"/>
+              <stop offset="100%" stop-color="#ad1457"/>
+            </radialGradient>
+            <radialGradient id="petalMid${id}" cx="40%" cy="30%">
+              <stop offset="0%" stop-color="#ff8fab"/>
+              <stop offset="30%" stop-color="#f06292"/>
+              <stop offset="60%" stop-color="#e91e63"/>
+              <stop offset="100%" stop-color="#c2185b"/>
+            </radialGradient>
+            <radialGradient id="petalInner${id}" cx="50%" cy="40%">
+              <stop offset="0%" stop-color="#ffb7c5"/>
+              <stop offset="40%" stop-color="#ff8fab"/>
+              <stop offset="70%" stop-color="#f48fb1"/>
+              <stop offset="100%" stop-color="#f06292"/>
+            </radialGradient>
+            <radialGradient id="petalCenter${id}" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#fce4ec"/>
+              <stop offset="50%" stop-color="#f8bbd9"/>
+              <stop offset="100%" stop-color="#f48fb1"/>
+            </radialGradient>
+            <linearGradient id="leafGradient${id}" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6a9b7a"/>
+              <stop offset="50%" stop-color="#5a8f6a"/>
+              <stop offset="100%" stop-color="#4a7c59"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      `;
+    }
+
+    // Create floating rose (smaller, no stem)
+    function createFloatingRose(id) {
+      const size = 30 + Math.random() * 30;
+      const left = Math.random() * 100;
+      const delay = Math.random() * 5;
+      const duration = 8 + Math.random() * 6;
+      
+      return `
+        <div class="floating-rose absolute" 
+             style="left: ${left}%; top: -60px; animation-delay: ${delay}s; animation-duration: ${duration}s;">
+          <svg width="${size}" height="${size}" viewBox="0 0 60 60">
+            <ellipse cx="30" cy="32" rx="16" ry="14" fill="#e91e63"/>
+            <ellipse cx="22" cy="28" rx="12" ry="10" fill="#f06292"/>
+            <ellipse cx="38" cy="28" rx="12" ry="10" fill="#f06292"/>
+            <ellipse cx="30" cy="25" rx="10" ry="8" fill="#f48fb1"/>
+            <ellipse cx="26" cy="24" rx="6" ry="6" fill="#f8bbd9"/>
+            <ellipse cx="34" cy="24" rx="6" ry="6" fill="#f8bbd9"/>
+            <ellipse cx="30" cy="22" rx="4" ry="4" fill="#fce4ec"/>
+            <circle cx="24" cy="30" r="1.5" fill="rgba(255,255,255,0.6)"/>
+          </svg>
+        </div>
+      `;
+    }
+
+    // Create sparkle
+    function createSparkle() {
+      const left = Math.random() * 100;
+      const top = Math.random() * 100;
+      const delay = Math.random() * 3;
+      const size = 4 + Math.random() * 8;
+      
+      return `
+        <div class="sparkle absolute" 
+             style="left: ${left}%; top: ${top}%; animation-delay: ${delay}s;">
+          <svg width="${size}" height="${size}" viewBox="0 0 20 20">
+            <path d="M10 0 L11 8 L20 10 L11 12 L10 20 L9 12 L0 10 L9 8 Z" fill="rgba(255,255,255,0.8)"/>
+          </svg>
+        </div>
+      `;
+    }
+
+    // Create grass blades
+    function createGrass() {
+      const grassContainer = document.getElementById('grass');
+      let grassHTML = '';
+      for (let i = 0; i < 60; i++) {
+        const height = 15 + Math.random() * 20;
+        const left = i * 1.7 + Math.random() * 1;
+        const delay = Math.random() * 2;
+        grassHTML += `
+          <div class="absolute bottom-0" style="left: ${left}%; animation: sway 3s ease-in-out infinite; animation-delay: ${delay}s;">
+            <div style="width: 3px; height: ${height}px; background: linear-gradient(to top, #4a7c59, #6a9b7a); border-radius: 50% 50% 0 0;"></div>
+          </div>
+        `;
+      }
+      grassContainer.innerHTML = grassHTML;
+    }
+
+    // Animation sequence
+    async function growGarden() {
+      const garden = document.getElementById('rose-garden');
+      const roseCount = 5;
+      const roses = [];
+      
+      // Create rose containers
+      for (let i = 0; i < roseCount; i++) {
+        const size = 60 + (i === 2 ? 30 : Math.random() * 20); // Center rose is bigger
+        const roseWrapper = document.createElement('div');
+        roseWrapper.className = 'relative';
+        roseWrapper.style.cssText = `
+          opacity: 0;
+          transform: translateY(50px);
+          transition: all 0.8s ease-out;
+          animation: sway ${3 + Math.random()}s ease-in-out infinite;
+          animation-delay: ${i * 0.2}s;
+        `;
+        roseWrapper.innerHTML = createRoseSVG(size, i);
+        garden.appendChild(roseWrapper);
+        roses.push(roseWrapper);
+      }
+      
+      // Grow each rose with delay
+      for (let i = 0; i < roses.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 600));
+        roses[i].style.opacity = '1';
+        roses[i].style.transform = 'translateY(0)';
+      }
+      
+      // Wait for roses to fully grow
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Hide growing text
+      document.getElementById('growing-text').style.opacity = '0';
+      
+      // Show title with animation
+      const titleContainer = document.getElementById('title-container');
+      titleContainer.style.transition = 'all 1s ease-out';
+      titleContainer.style.opacity = '1';
+      titleContainer.style.pointerEvents = 'auto';
+      titleContainer.style.animation = 'fadeInUp 1s ease-out forwards';
+      
+      // Wait a bit
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Start floating roses
+      const floatingContainer = document.getElementById('floating-roses');
+      let floatingHTML = '';
+      for (let i = 0; i < 15; i++) {
+        floatingHTML += createFloatingRose(i);
+      }
+      floatingContainer.innerHTML = floatingHTML;
+      floatingContainer.style.transition = 'opacity 1s';
+      floatingContainer.style.opacity = '1';
+      
+      // Add sparkles
+      const sparklesContainer = document.getElementById('sparkles');
+      let sparklesHTML = '';
+      for (let i = 0; i < 20; i++) {
+        sparklesHTML += createSparkle();
+      }
+      sparklesContainer.innerHTML = sparklesHTML;
+      
+      // Show love letter button
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const btnContainer = document.getElementById('letter-btn-container');
+      btnContainer.style.transition = 'all 0.8s ease-out';
+      btnContainer.style.opacity = '1';
+      btnContainer.style.pointerEvents = 'auto';
+    }
+
+    // Letter popup functionality
+    function setupLetterPopup() {
+      const openBtn = document.getElementById('open-letter-btn');
+      const closeBtn = document.getElementById('close-letter-btn');
+      const overlay = document.getElementById('letter-overlay');
+      const content = document.getElementById('letter-content');
+      
+      openBtn.addEventListener('click', () => {
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+        setTimeout(() => {
+          content.style.transform = 'scale(1)';
+        }, 100);
+      });
+      
+      closeBtn.addEventListener('click', closeLetter);
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeLetter();
+      });
+      
+      function closeLetter() {
+        content.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+        }, 200);
+      }
+    }
+
+    // Initialize
+    function init() {
+      createGrass();
+      setupLetterPopup();
+      
+      // Start the growing animation after a short delay
+      setTimeout(() => {
+        growGarden();
+      }, 500);
+    }
+
+    // Config change handler
+    async function onConfigChange(newConfig) {
+      config = { ...defaultConfig, ...newConfig };
+      
+      document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+      document.getElementById('letter-text').textContent = config.letter_message || defaultConfig.letter_message;
+    }
+
+    // SDK initialization
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (cfg) => ({
+          recolorables: [
+            {
+              get: () => cfg.primary_color || defaultConfig.primary_color,
+              set: (v) => { cfg.primary_color = v; window.elementSdk.setConfig({ primary_color: v }); }
+            },
+            {
+              get: () => cfg.secondary_color || defaultConfig.secondary_color,
+              set: (v) => { cfg.secondary_color = v; window.elementSdk.setConfig({ secondary_color: v }); }
+            },
+            {
+              get: () => cfg.text_color || defaultConfig.text_color,
+              set: (v) => { cfg.text_color = v; window.elementSdk.setConfig({ text_color: v }); }
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['main_title', cfg.main_title || defaultConfig.main_title],
+          ['letter_message', cfg.letter_message || defaultConfig.letter_message]
+        ])
+      });
+    }
+
+    // Start when DOM is ready
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c9c9699251c6eb9',t:'MTc3MDQwMTI1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
